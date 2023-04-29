@@ -12,6 +12,9 @@ services:
       - .:/bookingdotcom:z
     ports:
       - 8080:8080
+    depends_on:
+      - bookingdotcom-mongo
+      - bookingdotco-mongo-express
 
   bookingdotcom-mongo:
     image: mongo
