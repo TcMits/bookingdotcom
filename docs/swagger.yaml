@@ -1,0 +1,405 @@
+basePath: /
+definitions:
+  echo.HTTPError:
+    properties:
+      message: {}
+    type: object
+  model.Image:
+    properties:
+      altText:
+        type: string
+      fileName:
+        type: string
+    type: object
+  model.ReservedTime:
+    properties:
+      description:
+        type: string
+      email:
+        type: string
+      from:
+        example: "2021-05-01T00:00:00Z"
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      receiveTime:
+        example: "2021-05-01T00:00:00Z"
+        type: string
+      to:
+        example: "2021-05-01T00:00:00Z"
+        type: string
+    type: object
+  model.Room:
+    properties:
+      bedsCount:
+        type: integer
+      code:
+        type: string
+      description:
+        type: string
+      images:
+        items:
+          $ref: '#/definitions/model.Image'
+        type: array
+      maxAdultGuests:
+        type: integer
+      maxChildrenGuests:
+        type: integer
+      name:
+        type: string
+      pricePerDay:
+        type: number
+      pricePerHour:
+        type: number
+      reservedTimes:
+        items:
+          $ref: '#/definitions/model.ReservedTime'
+        type: array
+    type: object
+  model.Stay:
+    properties:
+      address:
+        type: string
+      description:
+        type: string
+      districtCode:
+        type: integer
+      districtName:
+        type: string
+      id:
+        type: string
+      images:
+        items:
+          $ref: '#/definitions/model.Image'
+        type: array
+      name:
+        type: string
+      provinceCode:
+        type: integer
+      provinceName:
+        type: string
+      rooms:
+        items:
+          $ref: '#/definitions/model.Room'
+        type: array
+      stayType:
+        type: string
+      wardCode:
+        type: integer
+      wardName:
+        type: string
+    type: object
+  usecase.DivisionAPIUseCaseFindResult:
+    properties:
+      count:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/vnprovince.Division'
+        type: array
+    type: object
+  usecase.StayAPIUseCaseFindStaysResult:
+    properties:
+      count:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/model.Stay'
+        type: array
+    type: object
+  usecase.StayAPIUseCaseReserveRoomBody:
+    properties:
+      description:
+        type: string
+      email:
+        type: string
+      from:
+        example: "2021-05-01T00:00:00Z"
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      receiveTime:
+        example: "2021-05-01T00:00:00Z"
+        type: string
+      roomCode:
+        type: string
+      to:
+        example: "2021-05-01T00:00:00Z"
+        type: string
+    type: object
+  usecase.StayAPIUseCaseReserveRoomResult:
+    properties:
+      address:
+        type: string
+      description:
+        type: string
+      districtCode:
+        type: integer
+      districtName:
+        type: string
+      id:
+        type: string
+      images:
+        items:
+          $ref: '#/definitions/model.Image'
+        type: array
+      name:
+        type: string
+      provinceCode:
+        type: integer
+      provinceName:
+        type: string
+      rooms:
+        items:
+          $ref: '#/definitions/model.Room'
+        type: array
+      stayType:
+        type: string
+      wardCode:
+        type: integer
+      wardName:
+        type: string
+    type: object
+  vnprovince.Division:
+    properties:
+      districtCode:
+        type: integer
+      districtName:
+        type: string
+      provinceCode:
+        type: integer
+      provinceName:
+        type: string
+      wardCode:
+        type: integer
+      wardName:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This a course project at HCMUS.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger bookingdotcom API
+  version: "1.0"
+paths:
+  /divisions:
+    get:
+      consumes:
+      - application/json
+      description: get divisions
+      parameters:
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: offset
+        type: integer
+      - in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecase.DivisionAPIUseCaseFindResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: List vietnam divisions
+      tags:
+      - divisions
+  /stays:
+    get:
+      consumes:
+      - application/json
+      description: get stays example provinceCode=79&districtCode=770&wardCode=27127&guests=2&guests=0&checkTimes=2024-01-31T23:34:25.191Z&checkTimes=2024-09-21T06:10:36.275Z
+      parameters:
+      - in: query
+        name: adults
+        type: integer
+      - collectionFormat: csv
+        description: |-
+          CheckTimes is a pointer to an array of 2 types.DateTime, which is also weird.
+          first element is checkin, second is checkout
+        in: query
+        items:
+          type: string
+        name: checkTimes
+        type: array
+      - in: query
+        name: districtCode
+        type: integer
+      - collectionFormat: csv
+        description: |-
+          Guests is a pointer to an array of 2 int64s, which is a bit weird.
+          first element is adults, second is children
+        in: query
+        items:
+          type: integer
+        name: guests
+        type: array
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: offset
+        type: integer
+      - in: query
+        name: provinceCode
+        type: integer
+      - in: query
+        name: wardCode
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecase.StayAPIUseCaseFindStaysResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: List stays
+      tags:
+      - stays
+  /stays/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get stay
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - in: query
+        name: adults
+        type: integer
+      - collectionFormat: csv
+        description: |-
+          CheckTimes is a pointer to an array of 2 types.DateTime, which is also weird.
+          first element is checkin, second is checkout
+        in: query
+        items:
+          type: string
+        name: checkTimes
+        type: array
+      - in: query
+        name: districtCode
+        type: integer
+      - collectionFormat: csv
+        description: |-
+          Guests is a pointer to an array of 2 int64s, which is a bit weird.
+          first element is adults, second is children
+        in: query
+        items:
+          type: integer
+        name: guests
+        type: array
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: offset
+        type: integer
+      - in: query
+        name: provinceCode
+        type: integer
+      - in: query
+        name: wardCode
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecase.StayAPIUseCaseReserveRoomResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Show a stay
+      tags:
+      - stays
+  /stays/{id}/reserve:
+    patch:
+      consumes:
+      - application/json
+      description: reserve room
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/usecase.StayAPIUseCaseReserveRoomBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usecase.StayAPIUseCaseReserveRoomResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Reserve a room in a stay
+      tags:
+      - stays
+swagger: "2.0"

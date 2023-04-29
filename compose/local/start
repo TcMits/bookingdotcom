@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+air --build.cmd "go build -buildvcs=false -o ./tmp/main ./cmd/run" \
+  --build.bin "./tmp/main" \
+  --build.exclude_dir "assets,tmp,vendor,testdata,migrations,internal/plugin/main/migrations" \
+  --build.exclude_regex "_test.go" \
+  --build.include_ext "go,tpl,tmpl,html" \
+  -- main serve

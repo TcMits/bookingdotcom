@@ -1,0 +1,42 @@
+# IDE
+.idea
+.vscode
+
+# Config
+.env
+
+# Macs
+.DS_store
+
+# pocketbase
+pb_data/
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+tmp/
+testdata/
+
+tsolution-cms-20230131-backend
+*.log
+.data
+
+.envs/.production/*
+!.envs/.production/*.sample
+
+config/*production*
+!config/*production.sample*
+
+.integration_test/
