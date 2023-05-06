@@ -83,6 +83,7 @@ func main() {
 	server := echo.New()
 	server.Use(middleware.Logger())
 	server.Use(middleware.Recover())
+  server.Use(middleware.CORS())
 	api.NewAPIBuilder(app).Build(server)
 
 	if err := server.Start(":8080"); err != nil {
