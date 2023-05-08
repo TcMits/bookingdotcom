@@ -18,6 +18,7 @@ type Room struct {
 }
 
 type ReservedTime struct {
+	Code        string             `json:"code" bson:"code" fake:"{uuid}"`
 	From        primitive.DateTime `json:"from" bson:"from" example:"2021-05-01T00:00:00Z" swaggertype:"primitive,string"`
 	To          primitive.DateTime `json:"to" bson:"to" example:"2021-05-01T00:00:00Z" swaggertype:"primitive,string"`
 	Name        string             `json:"name" bson:"name" fake:"{name}"`
@@ -25,4 +26,5 @@ type ReservedTime struct {
 	Description string             `json:"description" bson:"description" fake:"{sentence:50}"`
 	Phone       string             `json:"phone" bson:"phone" fake:"{phone}"`
 	ReceiveTime primitive.DateTime `json:"receiveTime" bson:"receiveTime" example:"2021-05-01T00:00:00Z" swaggertype:"primitive,string"`
+	TotalPrice  float64            `json:"totalPrice" bson:"totalPrice" fake:"{number:10000,100000000}"`
 }

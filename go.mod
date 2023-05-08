@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/TcMits/vnprovince v0.1.0
 	github.com/brianvoe/gofakeit/v6 v6.21.0
+	github.com/google/uuid v1.3.0
 	github.com/labstack/echo/v5 v5.0.0-20220201181537-ed2888cfa198
 	github.com/pocketbase/pocketbase v0.15.1
 	github.com/swaggo/files/v2 v2.0.0

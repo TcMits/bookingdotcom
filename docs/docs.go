@@ -357,6 +357,9 @@ const docTemplate = `{
         "model.ReservedTime": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -380,6 +383,9 @@ const docTemplate = `{
                 "to": {
                     "type": "string",
                     "example": "2021-05-01T00:00:00Z"
+                },
+                "totalPrice": {
+                    "type": "number"
                 }
             }
         },
@@ -537,50 +543,35 @@ const docTemplate = `{
         "usecase.StayAPIUseCaseReserveRoomResult": {
             "type": "object",
             "properties": {
-                "address": {
+                "code": {
                     "type": "string"
                 },
                 "description": {
                     "type": "string"
                 },
-                "districtCode": {
-                    "type": "integer"
-                },
-                "districtName": {
+                "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "images": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Image"
-                    }
+                "from": {
+                    "type": "string",
+                    "example": "2021-05-01T00:00:00Z"
                 },
                 "name": {
                     "type": "string"
                 },
-                "provinceCode": {
-                    "type": "integer"
-                },
-                "provinceName": {
+                "phone": {
                     "type": "string"
                 },
-                "rooms": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Room"
-                    }
+                "receiveTime": {
+                    "type": "string",
+                    "example": "2021-05-01T00:00:00Z"
                 },
-                "stayType": {
-                    "type": "string"
+                "to": {
+                    "type": "string",
+                    "example": "2021-05-01T00:00:00Z"
                 },
-                "wardCode": {
-                    "type": "integer"
-                },
-                "wardName": {
-                    "type": "string"
+                "totalPrice": {
+                    "type": "number"
                 }
             }
         },

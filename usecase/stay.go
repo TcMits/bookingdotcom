@@ -3,12 +3,13 @@ package usecase
 import (
 	"context"
 	"errors"
-	"fmt"
+	"math"
 	"time"
 
 	"github.com/TcMits/bookingdotcom"
 	"github.com/TcMits/bookingdotcom/dao"
 	"github.com/TcMits/bookingdotcom/model"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -132,8 +133,14 @@ func (f *StayAPIUseCaseFindStaysConfig) filter() any {
 }
 
 type StayAPIUseCaseReserveRoomBody struct {
-	RoomCode           string `json:"roomCode"`
-	model.ReservedTime `json:",inline"`
+	RoomCode    string             `json:"roomCode"`
+	From        primitive.DateTime `json:"from" bson:"from" example:"2021-05-01T00:00:00Z" swaggertype:"primitive,string"`
+	To          primitive.DateTime `json:"to" bson:"to" example:"2021-05-01T00:00:00Z" swaggertype:"primitive,string"`
+	Name        string             `json:"name" bson:"name" fake:"{name}"`
+	Email       string             `json:"email" bson:"email" fake:"{email}"`
+	Description string             `json:"description" bson:"description" fake:"{sentence:50}"`
+	Phone       string             `json:"phone" bson:"phone" fake:"{phone}"`
+	ReceiveTime primitive.DateTime `json:"receiveTime" bson:"receiveTime" example:"2021-05-01T00:00:00Z" swaggertype:"primitive,string"`
 }
 
 type StayAPIUseCaseReserveRoomConfig struct {
@@ -190,7 +197,6 @@ func (f *StayAPIUseCaseReserveRoomConfig) countOptions() []*options.CountOptions
 }
 
 func (f *StayAPIUseCaseReserveRoomConfig) filter() any {
-	fmt.Println(f.RoomCode)
 	return bson.M{
 		"_id": f.StayID,
 		"rooms": bson.M{
@@ -227,7 +233,7 @@ type StayAPIUseCaseFindStaysResult struct {
 }
 
 type StayAPIUseCaseReserveRoomResult struct {
-	*model.Stay `json:",inline"`
+	*model.ReservedTime `json:",inline"`
 }
 
 type StayAPIUseCase struct {
@@ -309,13 +315,34 @@ func (u *StayAPIUseCase) ReserveRoom(ctx context.Context, config *StayAPIUseCase
 	}
 
 	stay := items[0]
-	result.Stay = stay
 	for i := range stay.Rooms {
 		if stay.Rooms[i].Code != config.RoomCode {
 			continue
 		}
 
-		stay.Rooms[i].ReservedTimes = append(stay.Rooms[i].ReservedTimes, config.ReservedTime)
+		totalPrice := 0.0
+		duration := config.To.Time().Sub(config.From.Time())
+
+		if config.From.Time().After(config.To.Time().Add(24 * time.Hour)) {
+			// use price per day
+			totalPrice = math.Ceil(duration.Hours()/24) * stay.Rooms[i].PricePerDay
+		} else {
+			// use price per hour
+			totalPrice = math.Ceil(duration.Hours()) * stay.Rooms[i].PricePerHour
+		}
+
+		stay.Rooms[i].ReservedTimes = append(stay.Rooms[i].ReservedTimes, model.ReservedTime{
+			Code:        uuid.New().String(),
+			From:        config.From,
+			To:          config.To,
+			ReceiveTime: config.ReceiveTime,
+			Name:        config.Name,
+			Phone:       config.Phone,
+			Email:       config.Email,
+			Description: config.Description,
+			TotalPrice:  totalPrice,
+		})
+		result.ReservedTime = &stay.Rooms[i].ReservedTimes[len(stay.Rooms[i].ReservedTimes)-1]
 		break
 	}
 

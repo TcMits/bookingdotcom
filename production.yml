@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  bookingdotcom:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./compose/production/Dockerfile
+    image: bookingdotcom_dev
+    container_name: bookingdotcom_dev
+    ports:
+      - 8080:8080
+    depends_on:
+      - bookingdotcom-mongo
+
+  bookingdotcom-mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: bookingdotcom

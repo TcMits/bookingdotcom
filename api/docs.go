@@ -25,9 +25,10 @@ func (b *docsAPIBuilder) Build(e *echo.Echo) {
 
 func (b *docsAPIBuilder) docsAsset(c echo.Context) error {
 	path := c.PathParam("*")
+	fullPath := c.Path()
 
 	if path == "" {
-		return c.Redirect(http.StatusMovedPermanently, c.Path()+"index.html")
+		return c.Redirect(http.StatusMovedPermanently, fullPath[:len(fullPath)-1]+"index.html")
 	}
 
 	switch filepath.Ext(path) {

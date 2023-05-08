@@ -13,6 +13,8 @@ definitions:
     type: object
   model.ReservedTime:
     properties:
+      code:
+        type: string
       description:
         type: string
       email:
@@ -30,6 +32,8 @@ definitions:
       to:
         example: "2021-05-01T00:00:00Z"
         type: string
+      totalPrice:
+        type: number
     type: object
   model.Room:
     properties:
@@ -133,36 +137,27 @@ definitions:
     type: object
   usecase.StayAPIUseCaseReserveRoomResult:
     properties:
-      address:
+      code:
         type: string
       description:
         type: string
-      districtCode:
-        type: integer
-      districtName:
+      email:
         type: string
-      id:
+      from:
+        example: "2021-05-01T00:00:00Z"
         type: string
-      images:
-        items:
-          $ref: '#/definitions/model.Image'
-        type: array
       name:
         type: string
-      provinceCode:
-        type: integer
-      provinceName:
+      phone:
         type: string
-      rooms:
-        items:
-          $ref: '#/definitions/model.Room'
-        type: array
-      stayType:
+      receiveTime:
+        example: "2021-05-01T00:00:00Z"
         type: string
-      wardCode:
-        type: integer
-      wardName:
+      to:
+        example: "2021-05-01T00:00:00Z"
         type: string
+      totalPrice:
+        type: number
     type: object
   vnprovince.Division:
     properties:
